@@ -3,9 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Person from "@material-ui/icons/Person";
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import List from '@material-ui/core/List';
@@ -15,6 +13,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+
+import ProfileMenu from './ProfileMenu'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -95,7 +95,7 @@ function NavBar() {
                     <Typography variant="h6" className={classes.title}>
                         Working Hours 3.0
                     </Typography>
-                    <Button color="inherit"><Person/></Button>
+                    <ProfileMenu />
                 </Toolbar>
             </AppBar>
         </div>
