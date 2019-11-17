@@ -2,18 +2,26 @@ import React, {useState} from 'react';
 import moment from 'moment';
 
 export default function CountDown() {
-    const [timer, setTimer] = useState({
+    const initialState = {
         timeElapsed: {
             hour: "0",
             minute: "00",
             seconds: "00"
         },
         totalSeconds: 0,
+        interval: null,
         started: false,
-    });
+    };
 
-    const getTime = () => {
-        setInterval(countTimer, 1000);
+    const [timer, setTimer] = useState(initialState);
+
+    const startTimer = () => {
+        timer.interval = setInterval(countTimer, 1000);
+    };
+
+    const stopTimer = () => {
+        clearInterval(timer.interval);
+        setTimer(initialState);
     };
 
     const countTimer = () => {
@@ -22,6 +30,7 @@ export default function CountDown() {
         setTimer({
             totalSeconds: totalSeconds,
             timeElapsed: timer.timeElapsed,
+            interval: timer.interval,
             started: true,
         });
 
@@ -32,6 +41,7 @@ export default function CountDown() {
         setTimer({
             timeElapsed: {hour, minute, seconds},
             totalSeconds: totalSeconds,
+            interval: timer.interval,
             started: true,
         });
     };
@@ -64,9 +74,14 @@ export default function CountDown() {
 
     return (
         <div>
-            <input type="button" onClick={getTime} disabled={timer.started} value="Start timer"/>
+
+            {
+                timer.started
+                    ? <input type="button" onClick={stopTimer} value="Stop timer"/>
+                    :
+                    <input type="button" onClick={startTimer} value="Start timer"/>
+            }
             <em>{getFullTimeString()}</em>
         </div>
     );
-
 };
