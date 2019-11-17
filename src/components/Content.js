@@ -7,7 +7,6 @@ import CountDown from "./CountDown";
 export default () => {
     return (
         <Grid>
-            <Typography itemType="h1">Chilling</Typography>
             <CountDown/>
         </Grid>
 
