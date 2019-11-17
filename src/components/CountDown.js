@@ -11,16 +11,35 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import moment from 'moment';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+} from '@material-ui/pickers';
 
-const options = ['Create a merge commit', 'Squash and merge', 'Rebase and merge'];
+const initialState = {
+    timeElapsed: {
+        hour: "0",
+        minute: "00",
+        seconds: "00"
+    },
+    totalSeconds: 0,
+    interval: null,
+    started: false,
+};
 
 export default function CountDown() {
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
+    const [timer, setTimer] = useState(initialState);
 
     const handleToggle = () => {
         setOpen(prevOpen => !prevOpen);
+    };
+
+    const handleDateChange = date => {
+        setSelectedDate(date);
     };
 
     const handleClose = event => {
@@ -30,19 +49,6 @@ export default function CountDown() {
 
         setOpen(false);
     };
-
-    const initialState = {
-        timeElapsed: {
-            hour: "0",
-            minute: "00",
-            seconds: "00"
-        },
-        totalSeconds: 0,
-        interval: null,
-        started: false,
-    };
-
-    const [timer, setTimer] = useState(initialState);
 
     const startTimer = () => {
         setStarted(true);
@@ -57,6 +63,7 @@ export default function CountDown() {
             started: status,
         });
     };
+
     const setTotalSeconds = (seconds) => {
         setTimer({
             totalSeconds: seconds,
@@ -150,23 +157,21 @@ export default function CountDown() {
                                 <Paper>
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
-                                            {
-                                                timer.started
-                                                    ? <MenuItem disabled={!timer.started}
-                                                        // selected={true}
-                                                        // onClick={event => startTimer()}
-                                                    >
-                                                        Pick End time
-                                                    </MenuItem>
-                                                    : <MenuItem disabled={timer.started}
-                                                        // selected={true}
-                                                        // onClick={event => startTimer()}
-                                                    >
-                                                        Pick Start time
-                                                    </MenuItem>
-                                            }
-
-
+                                            <MenuItem
+                                                // selected={true}
+                                                // onClick={event => startTimer()}
+                                            >
+                                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                    <KeyboardTimePicker
+                                                        margin="normal"
+                                                        label={timer.started ? "Pick End Time" : "Pick Start Time"}
+                                                        value={selectedDate}
+                                                        onChange={handleDateChange}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label': 'change time',
+                                                        }}/>
+                                                </MuiPickersUtilsProvider>
+                                            </MenuItem>
                                         </MenuList>
                                     </ClickAwayListener>
                                 </Paper>
@@ -176,7 +181,5 @@ export default function CountDown() {
                 </Grid>
             </Grid>
         </div>
-
-
     );
 };
