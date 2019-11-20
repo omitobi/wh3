@@ -43,8 +43,25 @@ const CountDown = ({addToTimes}) => {
         setSelectedDate(date);
     };
 
-    const handleClose = event => {
+    const handleDateAccepted = (ev) => {
+        console.log(ev);
+    };
+
+    const handlePickerOpen = () => {
+        console.log("Picker is open");
+    };
+
+    const handlePickerClose = () => {
+        console.log("Picker is closed");
+    };
+
+    const handleSubItemClose = event => {
+
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
+            return;
+        }
+
+        if (event.target.textContent !== "OK") {
             return;
         }
 
@@ -163,7 +180,7 @@ const CountDown = ({addToTimes}) => {
                                 }}
                             >
                                 <Paper>
-                                    <ClickAwayListener onClickAway={handleClose}>
+                                    <ClickAwayListener onClickAway={handleSubItemClose}>
                                         <MenuList id="split-button-menu">
                                             <MenuItem>
                                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -171,7 +188,11 @@ const CountDown = ({addToTimes}) => {
                                                         margin="normal"
                                                         label={timer.started ? "Pick End Time" : "Pick Start Time"}
                                                         value={selectedDate}
+                                                        onOpen={handlePickerOpen}
+                                                        onClose={handlePickerClose}
                                                         onChange={handleDateChange}
+                                                        variant="dialog"
+                                                        onAccept={handleDateAccepted}
                                                         KeyboardButtonProps={{
                                                             'aria-label': 'change time',
                                                         }}/>
