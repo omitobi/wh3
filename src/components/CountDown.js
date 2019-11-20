@@ -16,19 +16,20 @@ import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
 } from '@material-ui/pickers';
+import moment from "moment";
 
 const initialState = {
     timeElapsed: {
-        hour: "0",
-        minute: "00",
-        seconds: "00"
+        hour: 0,
+        minute: 0,
+        seconds: 0
     },
     totalSeconds: 0,
     interval: null,
     started: false,
 };
 
-export default function CountDown() {
+const CountDown = ({addToTimes}) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
@@ -52,29 +53,13 @@ export default function CountDown() {
 
     const startTimer = () => {
         setStarted(true);
+        addToTimes(moment());
         timer.interval = setInterval(countTimer, 1000);
-    };
-
-    const setStarted = (status) => {
-        setTimer({
-            totalSeconds: timer.totalSeconds,
-            timeElapsed: timer.timeElapsed,
-            interval: timer.interval,
-            started: status,
-        });
-    };
-
-    const setTotalSeconds = (seconds) => {
-        setTimer({
-            totalSeconds: seconds,
-            timeElapsed: timer.timeElapsed,
-            interval: timer.interval,
-            started: timer.started,
-        });
     };
 
     const stopTimer = () => {
         clearInterval(timer.interval);
+        addToTimes(moment());
         setTimer(initialState);
     };
 
@@ -95,30 +80,53 @@ export default function CountDown() {
         });
     };
 
+    const setStarted = (status) => {
+        setTimer({
+            totalSeconds: timer.totalSeconds,
+            timeElapsed: timer.timeElapsed,
+            interval: timer.interval,
+            started: status,
+        });
+    };
+
+    const setTotalSeconds = (seconds) => {
+        setTimer({
+            totalSeconds: seconds,
+            timeElapsed: timer.timeElapsed,
+            interval: timer.interval,
+            started: timer.started,
+        });
+    };
+
     const getHour = (totalSeconds) => {
         return Math.floor(totalSeconds / 3600);
     };
 
     const getMinute = (totalSeconds, hour) => {
-        let minute = Math.floor((totalSeconds - hour * 3600) / 60);
-        if (minute < 10) {
-            minute = "0" + minute;
-        }
-
-        return minute;
+        return Math.floor((totalSeconds - hour * 3600) / 60);
     };
 
     const getSeconds = (totalSeconds, hour, minute) => {
-        let seconds = totalSeconds - (hour * 3600 + minute * 60);
-        if (seconds < 10) {
-            seconds = "0" + seconds;
-        }
-
-        return seconds;
+        return totalSeconds - (hour * 3600 + minute * 60);
     };
 
     const getFullTimeString = () => {
-        return timer.timeElapsed.hour + ":" + timer.timeElapsed.minute + ":" + timer.timeElapsed.seconds;
+        let timerString = timer.timeElapsed.hour + ":";
+
+        if (timer.timeElapsed.minute < 10) {
+            timerString += "0";
+        }
+
+        timerString += timer.timeElapsed.minute + ":"
+
+
+        if (timer.timeElapsed.seconds < 10) {
+            timerString += "0";
+        }
+
+        timerString += timer.timeElapsed.seconds;
+
+        return timerString;
     };
 
     return (
@@ -130,7 +138,7 @@ export default function CountDown() {
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
                         {
                             timer.started
-                                ? <Button color="secondary" onClick={stopTimer}>End Time</Button>
+                                ? <Button color="secondary" onClick={stopTimer}>Stop timer</Button>
                                 : <Button onClick={startTimer}>Start timer</Button>
                         }
 
@@ -157,10 +165,7 @@ export default function CountDown() {
                                 <Paper>
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
-                                            <MenuItem
-                                                // selected={true}
-                                                // onClick={event => startTimer()}
-                                            >
+                                            <MenuItem>
                                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                                     <KeyboardTimePicker
                                                         margin="normal"
@@ -183,3 +188,5 @@ export default function CountDown() {
         </div>
     );
 };
+
+export default CountDown;

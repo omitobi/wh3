@@ -17,15 +17,7 @@ const useStyles = makeStyles({
     },
 });
 
-function createData(name, startTime, endTime, Total) {
-    return {name, startTime, endTime, Total};
-}
-
-const rows = [
-    createData('Monday', "8:00", "16:00", "8:00"),
-];
-
-export default function TimesList() {
+const TimesList = ({timeRows}) => {
     const classes = useStyles();
 
     return (
@@ -35,23 +27,25 @@ export default function TimesList() {
                     <TableRow>
                         <TableCell>Day</TableCell>
                         <TableCell align="right">Start</TableCell>
-                        <TableCell align="right">End&nbsp;(g)</TableCell>
-                        <TableCell align="right">Total&nbsp;(g)</TableCell>
+                        <TableCell align="right">End&nbsp;</TableCell>
+                        <TableCell align="right">Total&nbsp;</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map(row => (
-                        <TableRow key={row.name}>
+                    {timeRows.map(row => (
+                        <TableRow key={row.id}>
                             <TableCell component="th" scope="row">
-                                {row.name}
+                                {row.day}
                             </TableCell>
-                            <TableCell align="right">{row.startTime}</TableCell>
-                            <TableCell align="right">{row.endTime}</TableCell>
-                            <TableCell align="right">{row.total}</TableCell>
+                            <TableCell align="right">{row.startTime.format('HH:mm')}</TableCell>
+                            <TableCell align="right">{row.endTime ? row.endTime.format('HH:mm') : '00:00'}</TableCell>
+                            <TableCell align="right">{row.total ? row.total : '00:00'}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
         </Paper>
     );
-}
+};
+
+export default TimesList;
