@@ -34,6 +34,7 @@ const CountDown = ({addToTimes}) => {
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
     const [timer, setTimer] = useState(initialState);
+    const [lastTime, setLastTime] = useState(null);
 
     const handleToggle = () => {
         setOpen(prevOpen => !prevOpen);
@@ -41,6 +42,7 @@ const CountDown = ({addToTimes}) => {
 
     const handleDateChange = date => {
         setSelectedDate(date);
+        toggleTimer(date);
     };
 
     const handleDateAccepted = (ev) => {
@@ -68,16 +70,28 @@ const CountDown = ({addToTimes}) => {
         setOpen(false);
     };
 
-    const startTimer = () => {
+    const startTimer = (selectedTime) => {
+        addToTimes(newTime(selectedTime));
         setStarted(true);
-        addToTimes(moment());
         timer.interval = setInterval(countTimer, 1000);
     };
 
-    const stopTimer = () => {
+    const newTime = (selectedTime) => {
+        return selectedTime !== null ? moment(selectedTime) : moment();
+    };
+
+    const stopTimer = (selectedTime = null) => {
+        addToTimes(newTime(selectedTime));
         clearInterval(timer.interval);
-        addToTimes(moment());
         setTimer(initialState);
+    };
+
+    const toggleTimer = (selectedTime) => {
+        if (timer.interval !== null) {
+            stopTimer(selectedTime);
+        } else {
+            startTimer(selectedTime);
+        }
     };
 
     const countTimer = () => {
@@ -155,8 +169,8 @@ const CountDown = ({addToTimes}) => {
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
                         {
                             timer.started
-                                ? <Button color="secondary" onClick={stopTimer}>Stop timer</Button>
-                                : <Button onClick={startTimer}>Start timer</Button>
+                                ? <Button color="secondary" onClick={() => stopTimer()}>Stop timer</Button>
+                                : <Button onClick={() => startTimer()}>Start timer</Button>
                         }
 
                         <Button
