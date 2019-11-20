@@ -20,6 +20,20 @@ const useStyles = makeStyles({
 const TimesList = ({timeRows}) => {
     const classes = useStyles();
 
+    const getTotalString = (totalMinutes) => {
+        let elapsedHour = Math.floor(totalMinutes / 60);
+        let elapsedMinutes = totalMinutes % 60;
+        let totalString = elapsedHour + ":";
+
+        if (elapsedMinutes < 10) {
+            totalString += "0";
+        }
+
+        totalString += elapsedMinutes;
+
+        return totalString;
+    };
+
     return (
         <Paper className={classes.root}>
             <Table className={classes.table} aria-label="simple table">
@@ -39,7 +53,8 @@ const TimesList = ({timeRows}) => {
                             </TableCell>
                             <TableCell align="right">{row.startTime.format('HH:mm')}</TableCell>
                             <TableCell align="right">{row.endTime ? row.endTime.format('HH:mm') : '00:00'}</TableCell>
-                            <TableCell align="right">{row.total ? row.total : '00:00'}</TableCell>
+                            <TableCell
+                                align="right">{getTotalString(row.total)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

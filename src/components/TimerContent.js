@@ -10,7 +10,7 @@ const TimerContent = () => {
     const addToTimes = (time) => {
         const initialTimeRows = timeRows;
 
-        let latestItem = getLastItem();
+        let latestItem = getFirstItem();
 
         if (latestItem === undefined || latestItem.endTime) {
             let timeRow = {};
@@ -19,9 +19,10 @@ const TimerContent = () => {
             timeRow.day = time.format('dddd');
             timeRow.startTime = time;
             timeRow.endTime = null;
-            timeRow.total = null;
+            timeRow.total = 0;
             setTimeRows([timeRow, ...timeRows]);
         }
+
         if (latestItem && !latestItem.endTime) {
             console.log('Updating old row with end time ', time.format('YYYY-MM-DD HH:mm'));
             latestItem.endTime = time;
@@ -31,7 +32,7 @@ const TimerContent = () => {
         }
     };
 
-    const getLastItem = () => {
+    const getFirstItem = () => {
         return timeRows[getFirstItemKey()];
     };
 
