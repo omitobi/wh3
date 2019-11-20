@@ -9,39 +9,34 @@ const TimerContent = () => {
 
     const addToTimes = (time) => {
         const initialTimeRows = timeRows;
-        let timeRow = {};
-        const lastItem = getLastItem();
 
-        console.log('addToTimes old row with end time', getLastItemKey());
-        if (lastItem === undefined || lastItem.endTime !== null) {
+        let latestItem = getLastItem();
+
+        if (latestItem === undefined || latestItem.endTime) {
+            let timeRow = {};
             console.log('Creating new row with ', time.format('YYYY-MM-DD HH:mm'));
             timeRow.id = Math.random() + Math.random();
-            timeRow.day = time.format('D');
+            timeRow.day = time.format('dddd');
             timeRow.startTime = time;
             timeRow.endTime = null;
             timeRow.total = null;
             setTimeRows([timeRow, ...timeRows]);
-
         }
-        if (lastItem && lastItem.endTime === null) {
+        if (latestItem && !latestItem.endTime) {
             console.log('Updating old row with end time ', time.format('YYYY-MM-DD HH:mm'));
-            lastItem.endTime = time;
-            lastItem.total = time.diff(lastItem.startTime);
-            initialTimeRows[getLastItemKey()] = lastItem;
+            latestItem.endTime = time;
+            latestItem.total = time.diff(latestItem.startTime, 'minutes');
+            initialTimeRows[getFirstItemKey()] = latestItem;
             setTimeRows([...initialTimeRows]);
         }
     };
 
-    function createTimeRow(day, startTime, endTime, Total) {
-        return {day, startTime, endTime, Total};
-    }
-
     const getLastItem = () => {
-        return timeRows[getLastItemKey()];
+        return timeRows[getFirstItemKey()];
     };
 
-    const getLastItemKey = () => {
-        return timeRows.length - 1
+    const getFirstItemKey = () => {
+        return 0;
     };
 
     return (
