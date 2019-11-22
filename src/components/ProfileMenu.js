@@ -16,6 +16,7 @@ export default function ProfileMenu() {
     };
 
     const handleLogout = () => {
+        localStorage.removeItem('timeRows');
         setAnchorEl(null);
     };
 

@@ -12,13 +12,14 @@ const TimerContent = () => {
 
         if (timeRowsStore !== null) {
             setTimeRows([...JSON.parse(timeRowsStore)]);
+            console.log(JSON.parse(timeRowsStore));
         }
 
     }, []);
 
     const addToTimes = (time) => {
 
-        const initialTimeRows = timeRows;
+        let initialTimeRows = timeRows;
 
         let latestItem = getFirstItem();
 
@@ -30,7 +31,8 @@ const TimerContent = () => {
             timeRow.startTime = time;
             timeRow.endTime = null;
             timeRow.total = 0;
-            setTimeRows([timeRow, ...timeRows]);
+            initialTimeRows = [timeRow, ...timeRows];
+            setTimeRows(initialTimeRows);
         }
 
         if (latestItem && !latestItem.endTime) {
@@ -41,8 +43,9 @@ const TimerContent = () => {
             setTimeRows([...initialTimeRows]);
         }
 
-        localStorage.setItem("timeRows", JSON.stringify(timeRows));
-        console.log(localStorage.getItem("timeRows"))
+        localStorage.setItem("timeRows", JSON.stringify(initialTimeRows));
+
+        console.log(JSON.parse(localStorage.getItem("timeRows")));
     };
 
     const getFirstItem = () => {
