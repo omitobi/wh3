@@ -18,22 +18,24 @@ import {
 } from '@material-ui/pickers';
 import moment from "moment";
 
-const initialState = {
-    timeElapsed: {
-        hour: 0,
-        minute: 0,
-        seconds: 0
-    },
-    totalSeconds: 0,
-    interval: null,
-    started: false,
+const getInitialTimerState = () => {
+    return {
+        timeElapsed: {
+            hour: 0,
+            minute: 0,
+            seconds: 0
+        },
+        totalSeconds: 0,
+        interval: null,
+        started: false,
+    }
 };
 
 const CountDown = ({addToTimes}) => {
+    const [timer, setTimer] = useState(getInitialTimerState());
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
-    const [timer, setTimer] = useState(initialState);
     const [lastTime, setLastTime] = useState(null);
 
     const handleToggle = () => {
@@ -83,7 +85,11 @@ const CountDown = ({addToTimes}) => {
     const stopTimer = (selectedTime = null) => {
         addToTimes(newTime(selectedTime));
         clearInterval(timer.interval);
-        setTimer(initialState);
+        resetToTimerInitialState(true);
+    };
+
+    const resetToTimerInitialState = () => {
+        setTimer(getInitialTimerState());
     };
 
     const toggleTimer = (selectedTime) => {
