@@ -64,10 +64,10 @@ const TimesList = ({timeRows}) => {
                             <TableCell component="th" scope="row">
                                 {row.day}
                             </TableCell>
-                            <TableCell align="right">{() => getStartTimeString(row.startTime)}</TableCell>
-                            <TableCell align="right">{() => getEndTimeString(row.endTime)}</TableCell>
+                            <TableCell align="right">{getStartTimeString(row.startTime)}</TableCell>
+                            <TableCell align="right">{getEndTimeString(row.endTime)}</TableCell>
                             <TableCell
-                                align="right">{() => getTotalString(row.total)}</TableCell>
+                                align="right">{getTotalString(row.total)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
