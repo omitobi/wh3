@@ -15,6 +15,10 @@ export default function ProfileMenu() {
         setAnchorEl(null);
     };
 
+    const handleLogout = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <div>
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -28,7 +32,7 @@ export default function ProfileMenu() {
                 onClose={handleClose}
             >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
         </div>
     );

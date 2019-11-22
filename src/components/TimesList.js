@@ -6,6 +6,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import moment from "moment";
 
 const useStyles = makeStyles({
     root: {
@@ -34,6 +35,18 @@ const TimesList = ({timeRows}) => {
         return totalString;
     };
 
+    const getStartTimeString = (startTime) => {
+        return moment(startTime).format("HH:mm");
+    };
+
+    const getEndTimeString = (endTime) => {
+        if (!endTime) {
+            return "00:00";
+        }
+
+        return moment(endTime).format("HH:mm");
+    };
+
     return (
         <Paper className={classes.root}>
             <Table className={classes.table} aria-label="simple table">
@@ -51,10 +64,10 @@ const TimesList = ({timeRows}) => {
                             <TableCell component="th" scope="row">
                                 {row.day}
                             </TableCell>
-                            <TableCell align="right">{row.startTime.format('HH:mm')}</TableCell>
-                            <TableCell align="right">{row.endTime ? row.endTime.format('HH:mm') : '00:00'}</TableCell>
+                            <TableCell align="right">{() => getStartTimeString(row.startTime)}</TableCell>
+                            <TableCell align="right">{() => getEndTimeString(row.endTime)}</TableCell>
                             <TableCell
-                                align="right">{getTotalString(row.total)}</TableCell>
+                                align="right">{() => getTotalString(row.total)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
