@@ -5,16 +5,20 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 
+import MenuIcon from '@material-ui/icons/Menu';
 import ProfileMenu from './ProfileMenu'
+import HelpIcon from '@material-ui/icons/Help';
+import HomeIcon from "@material-ui/icons/Home";
+import HistoryIcon from "@material-ui/icons/History";
+import FeedbackIcon from '@material-ui/icons/Feedback';
+import BeachAccessIcon from '@material-ui/icons/BeachAccess';
+import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -59,21 +63,33 @@ function NavBar() {
             onKeyDown={toggleDrawer(side, false)}
         >
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                        <ListItemText primary={text}/>
-                    </ListItem>
-                ))}
+                <ListItem button>
+                    <ListItemIcon><HomeIcon/></ListItemIcon>
+                    <ListItemText primary="Dashboard"/>
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon><HistoryIcon/></ListItemIcon>
+                    <ListItemText primary="History"/>
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon><BeachAccessIcon/></ListItemIcon>
+                    <ListItemText primary="Vacation"/>
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon><LocalHospitalIcon/></ListItemIcon>
+                    <ListItemText primary="Sick Leave"/>
+                </ListItem>
             </List>
             <Divider/>
             <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                        <ListItemText primary={text}/>
-                    </ListItem>
-                ))}
+                <ListItem button>
+                    <ListItemIcon><FeedbackIcon/></ListItemIcon>
+                    <ListItemText primary="Feedback"/>
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon><HelpIcon/></ListItemIcon>
+                    <ListItemText primary="Help"/>
+                </ListItem>
             </List>
         </div>
     );
@@ -95,7 +111,7 @@ function NavBar() {
                     <Typography variant="h6" className={classes.title}>
                         Working Hours 3.0
                     </Typography>
-                    <ProfileMenu />
+                    <ProfileMenu/>
                 </Toolbar>
             </AppBar>
         </div>
