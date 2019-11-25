@@ -56,9 +56,18 @@ const TimerContent = () => {
         return 0;
     };
 
+    const getLatestTimeRow = () => {
+        const latestTimeRow = getFirstItem();
+
+        return latestTimeRow ? latestTimeRow : {
+            startTime: null,
+            endTime: null
+        };
+    };
+
     return (
         <Grid item>
-            <CountDown addToTimes={addToTimes}/>
+            <CountDown addToTimes={addToTimes} latestTimeRow={getLatestTimeRow()}/>
             <div style={{marginLeft: "50px", marginRight: "50px", marginTop: "20px"}}>
                 <TimesList timeRows={timeRows}/>
             </div>
