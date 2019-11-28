@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import CountDownStyle from './../styles/CountDownStyle'
 import Button from '@material-ui/core/Button';
 
@@ -17,6 +17,7 @@ import {
     KeyboardTimePicker,
 } from '@material-ui/pickers';
 import moment from "moment";
+import TimeLogStore from "../stores/TimeLogStore";
 
 const getInitialTimerState = () => {
     return {
@@ -25,18 +26,35 @@ const getInitialTimerState = () => {
             minute: 0,
             seconds: 0
         },
-        totalSeconds: 0,
         interval: null,
         started: false,
     }
 };
 
+const getInitialTotalSecondState = () => {
+    return 0;
+};
+
+const getLatestTimeRow = () => {
+    const timeLogs = TimeLogStore();
+
+    const latestTimeRow = timeLogs[0];
+
+    return latestTimeRow ? latestTimeRow : {
+        startTime: null,
+        endTime: null
+    };
+};
+
+let totalSeconds = 0;
+
 const CountDown = ({addToTimes}) => {
+
     const [timer, setTimer] = useState(getInitialTimerState());
+    const [totalSecond, setTotalSecond] = useState(getInitialTotalSecondState());
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
-    const [lastTime, setLastTime] = useState(null);
 
     const handleToggle = () => {
         setOpen(prevOpen => !prevOpen);
@@ -45,18 +63,6 @@ const CountDown = ({addToTimes}) => {
     const handleDateChange = date => {
         setSelectedDate(date);
         toggleTimer(date);
-    };
-
-    const handleDateAccepted = (ev) => {
-        console.log(ev);
-    };
-
-    const handlePickerOpen = () => {
-        console.log("Picker is open");
-    };
-
-    const handlePickerClose = () => {
-        console.log("Picker is closed");
     };
 
     const handleSubItemClose = event => {
@@ -75,21 +81,14 @@ const CountDown = ({addToTimes}) => {
     const startTimer = (selectedTime) => {
         addToTimes(newTime(selectedTime));
         setStarted(true);
-        timer.interval = setInterval(countTimer, 1000);
-    };
-
-    const newTime = (selectedTime) => {
-        return selectedTime !== null ? moment(selectedTime) : moment();
+        const timerInterval = setInterval(countTimer, 1000);
+        setTimerInterval(timerInterval);
     };
 
     const stopTimer = (selectedTime = null) => {
         addToTimes(newTime(selectedTime));
         clearInterval(timer.interval);
         resetToTimerInitialState(true);
-    };
-
-    const resetToTimerInitialState = () => {
-        setTimer(getInitialTimerState());
     };
 
     const toggleTimer = (selectedTime) => {
@@ -101,38 +100,48 @@ const CountDown = ({addToTimes}) => {
     };
 
     const countTimer = () => {
-        let totalSeconds = ++timer.totalSeconds;
+        totalSeconds++;
 
-        setTotalSeconds(totalSeconds);
+        updateTotalSecond(totalSeconds);
 
         let hour = getHour(totalSeconds);
         let minute = getMinute(totalSeconds, hour);
         let seconds = getSeconds(totalSeconds, hour, minute);
 
-        setTimer({
+        setTimer((timed) => ({
             timeElapsed: {hour, minute, seconds},
-            totalSeconds: totalSeconds,
-            interval: timer.interval,
+            interval: timed.interval,
             started: true,
-        });
+        }));
+    };
+
+    const updateTotalSecond = (total) => {
+        setTotalSecond(second => total);
     };
 
     const setStarted = (status) => {
-        setTimer({
-            totalSeconds: timer.totalSeconds,
-            timeElapsed: timer.timeElapsed,
-            interval: timer.interval,
+        setTimer(timed => ({
+            timeElapsed: timed.timeElapsed,
+            interval: timed.interval,
             started: status,
-        });
+        }));
     };
 
-    const setTotalSeconds = (seconds) => {
-        setTimer({
-            totalSeconds: seconds,
-            timeElapsed: timer.timeElapsed,
-            interval: timer.interval,
-            started: timer.started,
-        });
+    const setTimerInterval = (interval) => {
+        console.log('Time interval', interval);
+        setTimer(timed => ({
+            timeElapsed: timed.timeElapsed,
+            interval: interval,
+            started: timed.status,
+        }));
+    };
+
+    const resetToTimerInitialState = () => {
+        setTimer(getInitialTimerState());
+    };
+
+    const newTime = (selectedTime) => {
+        return selectedTime !== null ? moment(selectedTime) : moment();
     };
 
     const getHour = (totalSeconds) => {
@@ -155,7 +164,6 @@ const CountDown = ({addToTimes}) => {
         }
 
         timerString += timer.timeElapsed.minute + ":"
-
 
         if (timer.timeElapsed.seconds < 10) {
             timerString += "0";
@@ -208,11 +216,11 @@ const CountDown = ({addToTimes}) => {
                                                         margin="normal"
                                                         label={timer.started ? "Pick End Time" : "Pick Start Time"}
                                                         value={selectedDate}
-                                                        onOpen={handlePickerOpen}
-                                                        onClose={handlePickerClose}
+                                                        onOpen={null}
+                                                        onClose={null}
                                                         onChange={handleDateChange}
                                                         variant="dialog"
-                                                        onAccept={handleDateAccepted}
+                                                        onAccept={null}
                                                         KeyboardButtonProps={{
                                                             'aria-label': 'change time',
                                                         }}/>
