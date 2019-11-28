@@ -1,18 +1,25 @@
 import React, {useEffect, useState} from "react";
+import TimeLogStore from "../stores/TimeLogStore";
 import CountDown from "./CountDown";
 import TimesList from "./TimesList";
 import Grid from "@material-ui/core/Grid";
 
+const getFirstItem = (timeRows) => {
+    return timeRows[getFirstItemKey()];
+};
+
+const getFirstItemKey = () => {
+    return 0;
+};
 
 const TimerContent = () => {
     const [timeRows, setTimeRows] = useState([]);
 
     useEffect(() => {
-        const timeRowsStore = localStorage.getItem('timeRows');
+        const timeRowStore = TimeLogStore();
 
-        if (timeRowsStore !== null) {
-            setTimeRows([...JSON.parse(timeRowsStore)]);
-            console.log(JSON.parse(timeRowsStore));
+        if (timeRowStore) {
+            setTimeRows(timeRowStore);
         }
 
     }, []);
@@ -21,7 +28,7 @@ const TimerContent = () => {
 
         let initialTimeRows = timeRows;
 
-        let latestItem = getFirstItem();
+        let latestItem = getFirstItem(timeRows);
 
         if (latestItem === undefined || latestItem.endTime) {
             let timeRow = {};
@@ -48,26 +55,9 @@ const TimerContent = () => {
         console.log(JSON.parse(localStorage.getItem("timeRows")));
     };
 
-    const getFirstItem = () => {
-        return timeRows[getFirstItemKey()];
-    };
-
-    const getFirstItemKey = () => {
-        return 0;
-    };
-
-    const getLatestTimeRow = () => {
-        const latestTimeRow = getFirstItem();
-
-        return latestTimeRow ? latestTimeRow : {
-            startTime: null,
-            endTime: null
-        };
-    };
-
     return (
         <Grid item>
-            <CountDown addToTimes={addToTimes} latestTimeRow={getLatestTimeRow()}/>
+            <CountDown addToTimes={addToTimes}/>
             <div style={{marginLeft: "50px", marginRight: "50px", marginTop: "20px"}}>
                 <TimesList timeRows={timeRows}/>
             </div>
