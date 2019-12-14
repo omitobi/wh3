@@ -7,6 +7,16 @@ import TimerButton from "./TimerButton";
 import CountDownStyle from "../styles/CountDownStyle";
 import moment from "moment";
 
+const getLatestTimeRow = () => {
+    const timeLogs = TimeLogStore();
+
+    const latestTimeRow = timeLogs[0];
+
+    return latestTimeRow ? latestTimeRow : {
+        startTime: null,
+        endTime: null
+    };
+};
 
 const getFirstItem = (timeRows) => {
     return timeRows[getFirstItemKey()];
@@ -27,6 +37,15 @@ const TimerContent = () => {
 
         if (timeRowStore) {
             setTimeRows(timeRowStore);
+
+            const latestTimeRow = getLatestTimeRow();
+
+            if (latestTimeRow.startTime && ! latestTimeRow.endTime) {
+                const totalSeconds = moment().diff(moment(latestTimeRow.startTime), 'seconds');
+                setAction('start');
+                setStarted(true);
+                setAt(totalSeconds);
+            }
         }
 
     }, []);
