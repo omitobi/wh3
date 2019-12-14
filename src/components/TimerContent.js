@@ -89,9 +89,7 @@ const TimerContent = () => {
 
         if (action === "start") {
             setStarted(true);
-            if (time) {
-                setAt(moment().diff(moment(time), 'seconds'));
-            }
+            setAt(moment().diff(moment(time), 'seconds'));
         }
 
         if (action === "stop") {
