@@ -23,7 +23,6 @@ const CountDown = ({action, at}) => {
     const [totalSecond, setTotalSecond] = useState(getInitialTotalSecondState());
 
     useEffect(() => {
-        console.log(action, at);
         const updateTimer = () => {
             let totalSeconds = updateNowTotalSecond();
             const hour = getHour(totalSeconds);

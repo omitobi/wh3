@@ -40,7 +40,7 @@ const TimerContent = () => {
 
             const latestTimeRow = getLatestTimeRow();
 
-            if (latestTimeRow.startTime && ! latestTimeRow.endTime) {
+            if (latestTimeRow.startTime && !latestTimeRow.endTime) {
                 const totalSeconds = moment().diff(moment(latestTimeRow.startTime), 'seconds');
                 setAction('start');
                 setStarted(true);
@@ -82,13 +82,16 @@ const TimerContent = () => {
     };
 
     const toggle = (action, time) => {
-        console.log('action', action, time);
+        console.log('We receive a toggle(action, time)', action, time);
 
         setAction(action);
         addToTimes(moment(time));
 
         if (action === "start") {
             setStarted(true);
+            if (time) {
+                setAt(moment().diff(moment(time), 'seconds'));
+            }
         }
 
         if (action === "stop") {
