@@ -3,6 +3,9 @@ import TimeLogStore from "../stores/TimeLogStore";
 import CountDown from "./CountDown";
 import TimesList from "./TimesList";
 import Grid from "@material-ui/core/Grid";
+import TimerButton from "./TimerButton";
+import CountDownStyle from "../styles/CountDownStyle";
+
 
 const getFirstItem = (timeRows) => {
     return timeRows[getFirstItemKey()];
@@ -14,6 +17,9 @@ const getFirstItemKey = () => {
 
 const TimerContent = () => {
     const [timeRows, setTimeRows] = useState([]);
+    const [action, setAction] = useState(null);
+    const [at, setAt] = useState(null);
+    const [started, setStarted] = useState(false);
 
     useEffect(() => {
         const timeRowStore = TimeLogStore();
@@ -55,9 +61,28 @@ const TimerContent = () => {
         console.log(JSON.parse(localStorage.getItem("timeRows")));
     };
 
+    const toggle = (action) => {
+        console.log('action', action);
+
+        setAction(action);
+
+        if (action === "start") {
+            setStarted(true);
+        }
+
+        if (action === "stop") {
+            setStarted(false);
+        }
+    };
+
     return (
         <Grid item>
-            <CountDown addToTimes={addToTimes}/>
+            <div style={CountDownStyle.center}>
+                <Grid container direction="column" alignItems="center">
+                    <CountDown at={at} action={action}/>
+                    <TimerButton started={started} toggleTimer={toggle}/>
+                </Grid>
+            </div>
             <div style={{marginLeft: "50px", marginRight: "50px", marginTop: "20px"}}>
                 <TimesList timeRows={timeRows}/>
             </div>
