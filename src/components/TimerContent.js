@@ -5,6 +5,7 @@ import TimesList from "./TimesList";
 import Grid from "@material-ui/core/Grid";
 import TimerButton from "./TimerButton";
 import CountDownStyle from "../styles/CountDownStyle";
+import moment from "moment";
 
 
 const getFirstItem = (timeRows) => {
@@ -61,10 +62,11 @@ const TimerContent = () => {
         console.log(JSON.parse(localStorage.getItem("timeRows")));
     };
 
-    const toggle = (action) => {
-        console.log('action', action);
+    const toggle = (action, time) => {
+        console.log('action', action, time);
 
         setAction(action);
+        addToTimes(moment(time));
 
         if (action === "start") {
             setStarted(true);
